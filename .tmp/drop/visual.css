@@ -1,0 +1,24 @@
+.SVG {
+  width: 100% ;
+  height: 100% ;
+}
+.background {
+  fill: none;
+  pointer-events: all;
+}
+.feature {
+  fill: rgba(204, 43, 43, 0.84);
+  cursor: pointer;
+}
+.feature.active {
+  fill: rgba(39, 163, 78, 0.86);
+}
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/*# sourceMappingURL=https://localhost:8080/assets/visual.css.map*/
