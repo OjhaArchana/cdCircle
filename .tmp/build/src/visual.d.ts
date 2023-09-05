@@ -1,5 +1,6 @@
 import powerbi from "powerbi-visuals-api";
 import "./../style/visual.less";
+import "./statesData";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -11,7 +12,6 @@ export declare class Visual implements IVisual {
     width: number;
     height: number;
     zoom: any;
-    projection: any;
     path: any;
     g: any;
     constructor(options: VisualConstructorOptions);
