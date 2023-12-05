@@ -4,6 +4,7 @@ import "./statesData";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 export declare class Visual implements IVisual {
     private target;
     private formattingSettings;
@@ -12,6 +13,9 @@ export declare class Visual implements IVisual {
     width: number;
     height: number;
     zoom: any;
+    private selectionManager;
+    private tooltipServiceWrapper;
+    host: IVisualHost;
     path: any;
     g: any;
     constructor(options: VisualConstructorOptions);

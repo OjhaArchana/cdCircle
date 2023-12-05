@@ -47,6 +47,71 @@ class DataPointCardSettings extends FormattingSettingsCard {
     displayName = "Data colors";
     slices = [this.defaultColor, this.showAllDataPoints, this.fill, this.fillRule, this.fontSize];
 }
+class mapViewCardSettings extends FormattingSettingsCard {
+    // defaultColor = new formattingSettings.ColorPicker({
+    //     name: "defaultColor",
+    //     displayName: "Default color",
+    //     value: { value: "" }
+    // });
+    showmapView = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ToggleSwitch */ .Zh({
+        name: "showmapView",
+        displayName: "ShowMap",
+        value: true
+    });
+    // fill = new formattingSettings.ColorPicker({
+    //     name: "fill",
+    //     displayName: "Fill",
+    //     value: { value: "" }
+    // });
+    // fillRule = new formattingSettings.ColorPicker({
+    //     name: "fillRule",
+    //     displayName: "Color saturation",
+    //     value: { value: "" }
+    // });
+    // fontSize = new formattingSettings.NumUpDown({
+    //     name: "fontSize",
+    //     displayName: "Text Size",
+    //     value: 12
+    // });
+    name = "mapView";
+    displayName = "Map";
+    slices = [this.showmapView];
+}
+class backgroundColorCardSettings extends FormattingSettingsCard {
+    // defaultColor = new formattingSettings.ColorPicker({
+    //     name: "defaultColor",
+    //     displayName: "Default color",
+    //     value: { value: "" }
+    // });
+    showBackground = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ToggleSwitch */ .Zh({
+        name: "showBackground",
+        displayName: "Background",
+        value: true
+    });
+    changeColor = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_0__/* .ColorPicker */ .zH({
+        name: "changeColor",
+        displayName: "Color",
+        value: { value: "#a0d1ff" }
+    });
+    // fill = new formattingSettings.ColorPicker({
+    //     name: "fill",
+    //     displayName: "Fill",
+    //     value: { value: "" }
+    // });
+    // fillRule = new formattingSettings.ColorPicker({
+    //     name: "fillRule",
+    //     displayName: "Color saturation",
+    //     value: { value: "" }
+    // });
+    // fontSize = new formattingSettings.NumUpDown({
+    //     name: "fontSize",
+    //     displayName: "Text Size",
+    //     value: 12
+    // });
+    name = "backgroundColor";
+    displayName = "Background";
+    slices = [this.showBackground, this.changeColor];
+}
 /**
 * visual settings model class
 *
@@ -54,7 +119,9 @@ class DataPointCardSettings extends FormattingSettingsCard {
 class VisualFormattingSettingsModel extends FormattingSettingsModel {
     // Create formatting settings model formatting cards
     dataPointCard = new DataPointCardSettings();
-    cards = [this.dataPointCard];
+    mapView = new mapViewCardSettings();
+    backgroundColor = new backgroundColorCardSettings();
+    cards = [this.dataPointCard, this.mapView, this.backgroundColor];
 }
 
 
@@ -31811,7 +31878,9 @@ const statesJson = {
 /* harmony import */ var topojson__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3800);
 /* harmony import */ var powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(4261);
 /* harmony import */ var _statesData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2773);
+/* harmony import */ var powerbi_visuals_utils_tooltiputils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9472);
 /* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1539);
+
 
 
 
@@ -31826,17 +31895,91 @@ class Visual {
     formattingSettings;
     formattingSettingsService;
     SVG;
-    width = 960;
-    height = 500;
+    width = 1000;
+    height = 700;
     zoom;
-    // public projection: any;
+    selectionManager;
+    tooltipServiceWrapper;
+    host;
+    // private host: IvisualHost;
     path;
     g;
     constructor(options) {
         // console.log('Visual constructor', options);
         this.formattingSettingsService = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z();
+        this.host = options.host;
+        this.selectionManager = this.host.createSelectionManager();
+        this.tooltipServiceWrapper = (0,powerbi_visuals_utils_tooltiputils__WEBPACK_IMPORTED_MODULE_5__/* .createTooltipServiceWrapper */ .p)(this.host.tooltipService, options.element);
         this.target = options.element;
-        this.SVG = (0,d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys)(this.target).append("svg").classed("SVG", true).attr("width", this.width).attr("height", this.height);
+        this.SVG = (0,d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys)(this.target)
+            .append("svg")
+            .classed("SVG", true)
+            .attr("width", this.width)
+            // .style("display", this.formattingSettings.backgroundColor.showBackground.value ? "block" : "none")
+            .attr("height", this.height);
+        // let active = d3.select(null);
+        // // const projection = d3.geoAlbersUsa().scale(1290).translate([this.width / 2, this.height / 2]);
+        // const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+        // const path = d3.geoPath().projection(null);
+        // this.SVG.append("rect")
+        //   .attr("class", "background")
+        //   .attr("width", this.width)
+        //   .attr("height", this.height)
+        //   .on("click", reset);
+        // const g = this.SVG.append("g").style("stroke-width", "1.5px");
+        // const us = statesJson;
+        // const states = g
+        //   .append("g")
+        //   .selectAll("path")
+        //   .data(topojson.feature(us, us.objects.states).features)
+        //   .enter()
+        //   .append("path")
+        //   .attr("d", path)
+        //   .attr("class", "feature")
+        //   .on("click", (e, d) => clicked(d));
+        // states.append("title").text((d) => d.properties.name);
+        // g.append("path")
+        //   .datum(topojson.mesh(us, us.objects.states, (a: any, b: any) => a !== b))
+        //   .attr("class", "mesh")
+        //   .attr("d", path);
+        // function clicked(d) {
+        //   if (active.node() === this) return reset();
+        //   console.log(d);
+        //   active.classed("active", false);
+        //   active = d3.select(this).classed("active", true);
+        //   var bounds = path.bounds(d),
+        //     dx = bounds[1][0] - bounds[0][0],
+        //     dy = bounds[1][1] - bounds[0][1],
+        //     x = (bounds[0][0] + bounds[1][0]) / 2,
+        //     y = (bounds[0][1] + bounds[1][1]) / 2,
+        //     scale = Math.max(
+        //       1,
+        //       Math.min(8, 0.9 / Math.max(dx / this.width, dy / this.height))
+        //     ),
+        //     translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
+        //   this.SVG.transition()
+        //     .duration(750)
+        //     .call(
+        //       zoom.transform,
+        //       d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+        //     );
+        // }
+        // function reset() {
+        //   active.classed("active", false);
+        //   active = d3.select(null);
+        //   this.SVG.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+        // }
+        // function zoomed(event) {
+        //   g.style("stroke-width", 1.5 / event.transform.k + "px");
+        //   g.attr("transform", event.transform);
+        // }
+        // function stopped(event) {
+        //   if (event.defaultPrevented) event.stopPropagation();
+        // }
+    }
+    update(options) {
+        this.formattingSettings =
+            this.formattingSettingsService.populateFormattingSettingsModel(_settings__WEBPACK_IMPORTED_MODULE_3__/* .VisualFormattingSettingsModel */ .E, options.dataViews);
         let active = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(null);
         // const projection = d3.geoAlbersUsa().scale(1290).translate([this.width / 2, this.height / 2]);
         const zoom = d3__WEBPACK_IMPORTED_MODULE_0__/* .zoom */ .sPX().scaleExtent([1, 8]).on("zoom", zoomed);
@@ -31846,29 +31989,118 @@ class Visual {
             .attr("width", this.width)
             .attr("height", this.height)
             .on("click", reset);
-        const g = this.SVG.append("g")
-            .style("stroke-width", "1.5px");
+        const g = this.SVG.append("g").style("stroke-width", "1.5px");
         const us = _statesData__WEBPACK_IMPORTED_MODULE_2__/* .statesJson */ .O;
-        const states = g.append("g")
+        const states = g
+            .append("g")
             .selectAll("path")
+            .classed("states", true)
             .data(topojson__WEBPACK_IMPORTED_MODULE_1__/* .feature */ .zL(us, us.objects.states).features)
-            .enter().append("path")
+            .enter()
+            .append("path")
             .attr("d", path)
             .attr("class", "feature")
-            .on("click", clicked);
-        states.append("title")
-            .text(d => d.properties.name);
+            .style("display", this.formattingSettings.mapView.showmapView.value ? "block" : "none")
+            .on("click", (e, d) => clicked(d, category));
+        states.append("title").text((d) => d.properties.name);
         g.append("path")
-            .datum(topojson__WEBPACK_IMPORTED_MODULE_1__/* .mesh */ .WS(us, us.objects.states, (a, b) => a !== b)).attr("class", "mesh").attr("d", path);
-        function clicked(d) {
-            if (active.node() === this)
-                return reset();
-            active.classed("active", false);
-            active = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(this).classed("active", true);
-            var bounds = path.bounds(d), dx = bounds[1][0] - bounds[0][0], dy = bounds[1][1] - bounds[0][1], x = (bounds[0][0] + bounds[1][0]) / 2, y = (bounds[0][1] + bounds[1][1]) / 2, scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / this.width, dy / this.height))), translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
-            this.SVG.transition()
-                .duration(750)
-                .call(zoom.transform, d3__WEBPACK_IMPORTED_MODULE_0__/* .zoomIdentity */ .CRH.translate(translate[0], translate[1]).scale(scale));
+            .datum(topojson__WEBPACK_IMPORTED_MODULE_1__/* .mesh */ .WS(us, us.objects.states, (a, b) => a !== b))
+            .attr("class", "mesh")
+            .attr("d", path);
+        function zoomed(event) {
+            g.style("stroke-width", 1.5 / event.transform.k + "px");
+            g.attr("transform", event.transform);
+        }
+        // function stopped(event) {
+        //   if (event.defaultPrevented) event.stopPropagation();
+        // }
+        function getTooltipData(data) {
+            let tooltipDataArray = [];
+            tooltipDataArray.push({
+                header: data.states,
+                displayName: "Name",
+                value: `${states.value}`,
+            });
+            return tooltipDataArray;
+        }
+        function handleContextMenu() {
+            (0,d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_)(".states").on("contextmenu", (event, dataPoint) => {
+                const mouseEvent = event;
+                this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
+                    x: mouseEvent.clientX,
+                    y: mouseEvent.clientY,
+                });
+                mouseEvent.preventDefault();
+            });
+        }
+        function syncSelectionState(Selection, selectionIds) {
+            if (!Selection || !selectionIds) {
+                return;
+            }
+            if (selectionIds.length === 0) {
+                (0,d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_)(".states").style("opacity", 1);
+                return;
+            }
+            Selection.each((datapoint, i, e) => {
+                const selectionId = datapoint.selectionId;
+                const isSelected = selectionIds.some((currentSelectionId) => {
+                    return currentSelectionId.includes(selectionId);
+                });
+                const opacity = isSelected ? 1 : 0.5;
+                const currentSelection = (0,d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys)(e[i]);
+                currentSelection.style("opacity", opacity);
+            });
+        }
+        const category = options.dataViews[0].categorical.categories[0];
+        function clicked(d, category) {
+            console.log(states);
+            const stateName = d.properties.name;
+            const categoryIndex = category.findIndex((el) => `${el}` === stateName);
+            const categorySelectionId = this.host
+                .createSelectionIdBuilder()
+                .withCategory(category.us.geometries.id[0], categoryIndex)
+                .createSelectionId();
+            this.selectionManager.select(categorySelectionId);
+            const datapoint = {
+                state: d,
+                selectionId: categorySelectionId,
+            };
+            states.data([datapoint]).on("click", (d) => {
+                // console.log(d);
+                this.selectionManager
+                    .select(d.selectionId)
+                    .then((ids) => {
+                    syncSelectionState((0,d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_)(".states"), ids);
+                });
+            });
+            //   this.tooltipServiceWrapper.addTooltip(
+            //     selectAll(".states"),
+            //     (tooltipEvent: TooltipEventArgs<number>) =>
+            //       getTooltipData(tooltipEvent),
+            //     (tooltipEvent: any) => tooltipEvent.selectionId
+            //   );
+            //   handleContextMenu();
+            // console.log("Visual update", options);
+            ////**CLICK METHOD HERE ONWARDS**////
+            // if (active.node() === this) return reset();
+            // active.classed("active", false);
+            // active = d3.select(this).classed("active", true);
+            // var bounds = path.bounds(d),
+            //   dx = bounds[1][0] - bounds[0][0],
+            //   dy = bounds[1][1] - bounds[0][1],
+            //   x = (bounds[0][0] + bounds[1][0]) / 2,
+            //   y = (bounds[0][1] + bounds[1][1]) / 2,
+            //   scale = Math.max(
+            //     1,
+            //     Math.min(8, 0.9 / Math.max(dx / this.width, dy / this.height))
+            //   ),
+            //   translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
+            // this.SVG.transition()
+            //   .duration(750)
+            //   .call(
+            //     zoom.transform,
+            //     d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+            //   );
         }
         function reset() {
             active.classed("active", false);
@@ -31877,18 +32109,6 @@ class Visual {
                 .duration(750)
                 .call(zoom.transform, d3__WEBPACK_IMPORTED_MODULE_0__/* .zoomIdentity */ .CRH);
         }
-        function zoomed(event) {
-            g.style("stroke-width", 1.5 / event.transform.k + "px");
-            g.attr("transform", event.transform);
-        }
-        function stopped(event) {
-            if (event.defaultPrevented)
-                event.stopPropagation();
-        }
-    }
-    update(options) {
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(_settings__WEBPACK_IMPORTED_MODULE_3__/* .VisualFormattingSettingsModel */ .E, options.dataViews);
-        // console.log('Visual update', options);
     }
     /**
      * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
@@ -32418,6 +32638,108 @@ function getPropertyValue(slice, value, defaultValue) {
     return value;
 }
 //# sourceMappingURL=FormattingSettingsUtils.js.map
+
+/***/ }),
+
+/***/ 8297:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   a: () => (/* binding */ DefaultHandleTouchDelay)
+/* harmony export */ });
+const DefaultHandleTouchDelay = 500;
+//# sourceMappingURL=constants.js.map
+
+/***/ }),
+
+/***/ 9472:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   p: () => (/* binding */ createTooltipServiceWrapper)
+/* harmony export */ });
+/* unused harmony export TooltipServiceWrapper */
+/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4264);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8297);
+
+
+function createTooltipServiceWrapper(tooltipService, rootElement, // this argument is deprecated and is optional now, just to maintain visuals with tooltiputils logic written for versions bellow 3.0.0
+handleTouchDelay = _constants__WEBPACK_IMPORTED_MODULE_0__/* .DefaultHandleTouchDelay */ .a) {
+    return new TooltipServiceWrapper({
+        tooltipService: tooltipService,
+        handleTouchDelay: handleTouchDelay,
+    });
+}
+class TooltipServiceWrapper {
+    constructor(options) {
+        this.visualHostTooltipService = options.tooltipService;
+        this.handleTouchDelay = options.handleTouchDelay;
+    }
+    addTooltip(selection, getTooltipInfoDelegate, getDataPointIdentity, reloadTooltipDataOnMouseMove) {
+        if (!selection || !this.visualHostTooltipService.enabled()) {
+            return;
+        }
+        const internalSelection = (0,d3_selection__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(selection.nodes());
+        const callTooltip = (func, event, tooltipInfo, selectionIds) => {
+            const coordinates = [event.clientX, event.clientY];
+            func.call(this.visualHostTooltipService, {
+                coordinates: coordinates,
+                isTouchEvent: event.pointerType === "touch",
+                dataItems: tooltipInfo,
+                identities: selectionIds
+            });
+        };
+        internalSelection.on("pointerover", (event, data) => {
+            const tooltipInfo = getTooltipInfoDelegate(data);
+            if (tooltipInfo == null) {
+                return;
+            }
+            const selectionIds = getDataPointIdentity ? [getDataPointIdentity(data)] : [];
+            if (event.pointerType === "mouse") {
+                callTooltip(this.visualHostTooltipService.show, event, tooltipInfo, selectionIds);
+            }
+            if (event.pointerType === "touch") {
+                this.handleTouchTimeoutId = window.setTimeout(() => {
+                    callTooltip(this.visualHostTooltipService.show, event, tooltipInfo, selectionIds);
+                    this.handleTouchTimeoutId = undefined;
+                }, this.handleTouchDelay);
+            }
+        });
+        internalSelection.on("pointerout", (event) => {
+            if (event.pointerType === "mouse") {
+                this.visualHostTooltipService.hide({
+                    isTouchEvent: false,
+                    immediately: false,
+                });
+            }
+            if (event.pointerType === "touch") {
+                this.cancelTouchTimeoutEvents();
+            }
+        });
+        internalSelection.on("pointermove", (event, data) => {
+            if (event.pointerType === "mouse") {
+                let tooltipInfo;
+                if (reloadTooltipDataOnMouseMove) {
+                    tooltipInfo = getTooltipInfoDelegate(data);
+                    if (tooltipInfo == null) {
+                        return;
+                    }
+                }
+                const selectionIds = getDataPointIdentity ? [getDataPointIdentity(data)] : [];
+                callTooltip(this.visualHostTooltipService.move, event, tooltipInfo, selectionIds);
+            }
+        });
+    }
+    cancelTouchTimeoutEvents() {
+        if (this.handleTouchTimeoutId) {
+            clearTimeout(this.handleTouchTimeoutId);
+        }
+    }
+    hide() {
+        this.visualHostTooltipService.hide({ immediately: true, isTouchEvent: false });
+    }
+}
+//# sourceMappingURL=tooltipService.js.map
 
 /***/ }),
 
@@ -35940,9 +36262,11 @@ function creatorFixed(fullname) {
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Ys: () => (/* reexport safe */ _select_js__WEBPACK_IMPORTED_MODULE_0__.Z)
+/* harmony export */   Ys: () => (/* reexport safe */ _select_js__WEBPACK_IMPORTED_MODULE_0__.Z),
+/* harmony export */   td: () => (/* reexport safe */ _selectAll_js__WEBPACK_IMPORTED_MODULE_1__.Z)
 /* harmony export */ });
 /* harmony import */ var _select_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3838);
+/* harmony import */ var _selectAll_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4264);
 
 
 
@@ -36067,6 +36391,26 @@ var xhtml = "http://www.w3.org/1999/xhtml";
   return typeof selector === "string"
       ? new _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[document.querySelector(selector)]], [document.documentElement])
       : new _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[selector]], _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
+}
+
+
+/***/ }),
+
+/***/ 4264:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _array_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9898);
+/* harmony import */ var _selection_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8390);
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(selector) {
+  return typeof selector === "string"
+      ? new _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([document.querySelectorAll(selector)], [document.documentElement])
+      : new _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([(0,_array_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(selector)], _selection_index_js__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
 }
 
 
@@ -39466,7 +39810,8 @@ function defaultConstrain(transform, extent, translateExtent) {
 /* harmony export */   CRH: () => (/* reexport safe */ d3_zoom__WEBPACK_IMPORTED_MODULE_4__.CR),
 /* harmony export */   Ys: () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_2__.Ys),
 /* harmony export */   l49: () => (/* reexport safe */ d3_geo__WEBPACK_IMPORTED_MODULE_1__.l4),
-/* harmony export */   sPX: () => (/* reexport safe */ d3_zoom__WEBPACK_IMPORTED_MODULE_4__.sP)
+/* harmony export */   sPX: () => (/* reexport safe */ d3_zoom__WEBPACK_IMPORTED_MODULE_4__.sP),
+/* harmony export */   td_: () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_2__.td)
 /* harmony export */ });
 /* harmony import */ var d3_brush__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9961);
 /* harmony import */ var d3_geo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3150);

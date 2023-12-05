@@ -15,12 +15,27 @@ declare class DataPointCardSettings extends FormattingSettingsCard {
     displayName: string;
     slices: Array<FormattingSettingsSlice>;
 }
+declare class mapViewCardSettings extends FormattingSettingsCard {
+    showmapView: formattingSettings.ToggleSwitch;
+    name: string;
+    displayName: string;
+    slices: Array<FormattingSettingsSlice>;
+}
+declare class backgroundColorCardSettings extends FormattingSettingsCard {
+    showBackground: formattingSettings.ToggleSwitch;
+    changeColor: formattingSettings.ColorPicker;
+    name: string;
+    displayName: string;
+    slices: Array<FormattingSettingsSlice>;
+}
 /**
 * visual settings model class
 *
 */
 export declare class VisualFormattingSettingsModel extends FormattingSettingsModel {
     dataPointCard: DataPointCardSettings;
-    cards: DataPointCardSettings[];
+    mapView: mapViewCardSettings;
+    backgroundColor: backgroundColorCardSettings;
+    cards: (DataPointCardSettings | mapViewCardSettings | backgroundColorCardSettings)[];
 }
 export {};

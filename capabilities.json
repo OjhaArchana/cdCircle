@@ -50,6 +50,37 @@
                     }
                 }
             }
+        },
+
+        "mapView": {
+            "properties": {
+                "showmapView":{
+                    "type":{
+                        "bool": true
+                    }
+                }
+
+            }
+        },
+
+        "backgroundColor": {
+            "properties": {
+                "showBackground":{
+                    "type":{
+                        "bool": true
+                    }
+                },
+
+                "changeColour":{
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [
